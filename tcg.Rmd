@@ -1,0 +1,48 @@
+```{r}
+library(rvest)
+library(dbplyr)
+library(tidyr)
+library(stringr)   
+library(lubridate)
+library(ggplot2)
+library(car)
+
+
+url <- read_html("http://www.leadthecompetition.in/GK/indian-leaders-birth-dates-and-memorials.html")
+
+read1 <- html_table(url)[[1]]
+read <- data.frame(read1)
+read
+
+read$Years <- floor(
+  difftime((Sys.Date()),
+          as.Date(as.character(read$Date.of.birth),'02 oct 1869',format="%d %B %Y"),unit="weeks") / 52.24)
+
+read
+
+read$Year <- floor(
+  difftime((Sys.Date()),
+           as.Date(as.character(read$Date.of.death),'30 jan 1948',format="%d %B %Y"),unit="weeks") / 52.24)
+
+read
+
+
+ggplot(read,aes(Year,Years))+geom_point(shape=1)+geom_smooth(method = lm)
+'
+lm(Year~Years,data=read)
+'
+data(read)
+head(read)
+
+fit0 <- lm(Year ~ Years, data = read)
+
+plot(Year ~ Years, data=read)
+
+abline(fit0)
+
+
+
+
+
+```
+
